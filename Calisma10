@@ -1,0 +1,216 @@
+// Calisma 10 :
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class adamAsmaca {
+
+    // Sehir isimlerinden olusan bir array tanimladim
+    public static String[] sehirIsimleri = {"antalya", "bursa", "istanbul", "izmir", "adana", "manisa", 
+    "ankara", "konya", "sivas", "trabzon"};
+
+     public static void main(String[] args) {
+
+        Scanner scan = new Scanner(System.in);
+
+        // Random bir kelime secen fonksiyon
+        String word = randomWord();
+        
+        // Harf sayisi kadar '_' iceren array
+        char[] placeholders = new char[word.length()];
+        for (int i = 0; i < placeholders.length; i++) {
+            placeholders[i] = '_';
+        }
+
+     // Hatayi 0' a ayarlayip , eger hata sayisi 6' dan dusuk ise ekrana kelimeyi , hata sayisini vb. yazdiriyor
+        int misses = 0;    
+
+        char[] missedGuesses =  new char[6];  
+
+        while (misses < 6) {
+            System.out.print(adamSekil[misses]);
+            
+            System.out.print("Word:   ");
+            printPlaceholders(placeholders);
+            System.out.print("\n");
+
+            System.out.print("Misses:   ");
+            printMissedGuesses(missedGuesses);
+            System.out.print("\n\n");
+
+            System.out.print("Guess:   ");
+            char guess = scan.nextLine().charAt(0);
+            System.out.print("\n");
+
+            if (checkGuess(word, guess)) {
+                updatePlaceholders(word, placeholders, guess);
+            } else {
+                missedGuesses[misses] = guess;
+                misses++;
+            }
+            
+            if (Arrays.equals(placeholders, word.toCharArray())) {
+                System.out.print(adamSekil[misses]);
+                System.out.print("\nWord:   ");
+                printPlaceholders(placeholders);
+                System.out.println("\nGOOD WORK!");                
+                break;
+            }
+
+        }
+
+        // Hata sayisi 6' ya esit ise oyun biter
+        if (misses == 6) {
+            System.out.print(adamSekil[6]);
+            System.out.println("\nMaalesef kaybettiniz!");
+            System.out.println("\nKelime : '" + word + "'");
+        }
+
+        // Buradaki kisim hatali. Yaptigim sayac ile kodu birlestiremedim 
+        int sure1 = 0;
+
+        int puan1 = hesaplaPuan(sure1);
+
+        System.out.println(sure1 + " sn için puan: " + puan1);
+        scan.close();
+    }
+
+    // Adam asmaca  her hata karsiliginda cizdirecegi resimler
+    public static String[] adamSekil = {"+---+\n" +
+    "|   |\n" +
+    "    |\n" +
+    "    |\n" +
+    "    |\n" +
+    "    |\n" +
+    "=========\n",
+
+    "+---+\n" +
+    "|   |\n" +
+    "O   |\n" +
+    "    |\n" +
+    "    |\n" +
+    "    |\n" +
+    "=========\n",
+
+    "+---+\n" +
+    "|   |\n" +
+    "O   |\n" +
+    "|   |\n" +
+    "    |\n" +
+    "    |\n" +
+    "=========\n",
+
+    " +---+\n" +
+    " |   |\n" +
+    " O   |\n" +
+    "/|   |\n" +
+    "     |\n" +
+    "     |\n" +
+    " =========\n",
+
+    " +---+\n" +
+    " |   |\n" +
+    " O   |\n" +
+    "/|\\  |\n" + 
+    "     |\n" +
+    "     |\n" +
+    " =========\n",
+
+    " +---+\n" +
+    " |   |\n" +
+    " O   |\n" +
+    "/|\\  |\n" +
+    "/    |\n" +
+    "     |\n" +
+    " =========\n",
+
+    " +---+\n" +
+    " |   |\n" +
+    " O   |\n" +
+    "/|\\  |\n" + 
+    "/ \\  |\n" +
+    "     |\n" +
+    " =========\n"
+};
+
+   
+    public static String randomWord() {
+        int numWords = sehirIsimleri.length;
+        double randomDouble = Math.random();
+        int randomIndex = (int) (randomDouble * numWords);
+        return sehirIsimleri[randomIndex];
+    }
+
+    public static boolean checkGuess(String word, char guess) {
+
+        /*
+          Char methodunda .equalsIgnoreCase olmadigi icin kelimenin buyuk veya kucuk olmasini altta yazmis oldugum 
+          koddlarla kontrol etmeye calistim ama olmadi  bu yuzden sehir isimleri yazili olan array de tum degiskenleri
+          kucuk harfle yazdirdim. Eger buyuk harf girisi yapilirsa veya harf haric her hangi bir sey girilirse sisteme
+          kullanicinin yeniden bir harf secmesi icin terminalde bir uyari mesaji gostericek ve yeniden secim
+          yaptiricak.
+         */
+       // word = word.toLowerCase(); 
+       // guess = Character.toLowerCase(guess);
+
+       if (!Character.isLetter(guess)) {
+        System.out.println("Lutfen bir harf girin.");
+        return false;
+      }
+
+      if (Character.isUpperCase(guess)) {
+        System.out.println("Lutfen kucuk harf girisi yapin!");
+        return false;
+    }
+
+        for (int i = 0; i < word.length(); i++) {
+            if (word.charAt(i) == guess) {
+                return true;
+
+            } 
+        }
+        return false;
+
+    }
+    // Yapmis oldugum sayac koda tanimlandigi taktirde sureye gore puan veren kod
+        public static int hesaplaPuan(int sure) {
+            if (sure >= 0 && sure <= 20) {
+                return 100;
+            } else if (sure > 20 && sure <= 30) {
+                return 90;
+            } else if (sure > 30 && sure <= 40) {
+                return 80;
+            } else if (sure > 40 && sure <= 50) {
+                return 70;
+            } else {
+                return 0; 
+            }
+        }
+    
+
+    public static void updatePlaceholders(String word, char[] placeholders, char guess) {
+
+            for (int j = 0; j < word.length(); j++) {
+
+                if (word.charAt(j) == guess) {
+                    placeholders[j] = guess;
+                }
+            }
+        }
+    
+
+    public static void printPlaceholders(char[] placeholders) {
+        for (int i = 0; i < placeholders.length; i++) {
+                System.out.print(" " + placeholders[i]);
+            }
+        System.out.print("\n");
+    }
+
+    
+    public static void printMissedGuesses(char[] misses) {
+        for (int i = 0; i < misses.length; i++) {
+            System.out.print(misses[i]);
+        }
+    }
+
+}
